@@ -1,0 +1,124 @@
+Private Sub cmb_add_Click()
+    ' Validation
+    If Me.txt_product.Value = "" Then
+        MsgBox "Please enter the Product Name", vbCritical
+        Exit Sub
+    End If
+
+    If Not IsNumeric(Me.txt_purchase_price.Value) Then
+        MsgBox "Please enter the correct Purchase Price", vbCritical
+        Exit Sub
+    End If
+
+    If Not IsNumeric(Me.txt_Sale_price.Value) Then
+        MsgBox "Please enter the correct Sale Price", vbCritical
+        Exit Sub
+    End If
+
+    ' Check Duplicate
+    Dim sh As Worksheet
+    Set sh = ThisWorkbook.Sheets("Product_Master")
+
+    If Application.WorksheetFunction.CountIf(sh.Range("B:B"), Me.txt_product.Value) > 0 Then
+        MsgBox "This product is already available in product Master", vbCritical
+        Exit Sub
+    End If
+
+    ' Add Data
+    Dim lr As Integer
+    lr = Application.WorksheetFunction.CountA(sh.Range("A:A"))
+
+    sh.Range("A" & lr + 1).Value = lr
+    sh.Range("B" & lr + 1).Value = Me.txt_product.Value
+    sh.Range("C" & lr + 1).Value = Me.txt_Sale_price.Value
+    sh.Range("D" & lr + 1).Value = Me.txt_purchase_price.Value
+
+    ' Clear Boxes
+    Me.txt_product.Value = ""
+    Me.txt_Sale_price.Value = ""
+    Me.txt_purchase_price.Value = ""
+
+    Call show_Data
+
+    MsgBox "Product has been added to the Product Master", vbInformation
+End Sub
+
+Sub show_Data()
+    Dim sh As Worksheet
+    Set sh = ThisWorkbook.Sheets("Product_Master")
+
+    Dim lr As Integer
+    lr = Application.WorksheetFunction.CountA(sh.Range("A:A"))
+
+    If lr = 1 Then lr = 2
+
+    With Me.ListBox1
+        .ColumnCount = 4
+        .ColumnHeads = True
+        .ColumnWidths = "60,150,80,80"
+        .RowSource = "Product_Master!A2:D" & lr
+    End With
+End Sub
+
+Private Sub cmb_product_export_Click()
+    Dim nwb As Workbook
+    Set nwb = Workbooks.Add
+
+    ThisWorkbook.Sheets("Product_Master").UsedRange.Copy nwb.Sheets(1).Range("A1")
+End Sub
+
+Private Sub cmb_update_Click()
+    ' Validation
+    If Me.txt_product.Value = "" Then
+        MsgBox "Please enter the Product Name", vbCritical
+        Exit Sub
+    End If
+
+    If Not IsNumeric(Me.txt_purchase_price.Value) Then
+        MsgBox "Please enter the correct Purchase Price", vbCritical
+        Exit Sub
+    End If
+
+    If Not IsNumeric(Me.txt_Sale_price.Value) Then
+        MsgBox "Please enter the correct Sale Price", vbCritical
+        Exit Sub
+    End If
+
+    Dim sh As Worksheet
+    Set sh = ThisWorkbook.Sheets("Product_Master")
+
+    ' Update Data
+    Dim lr As Long
+    lr = Me.txt_id.Value
+
+    sh.Range("A" & lr + 1).Value = lr
+    sh.Range("B" & lr + 1).Value = Me.txt_product.Value
+    sh.Range("C" & lr + 1).Value = Me.txt_Sale_price.Value
+    sh.Range("D" & lr + 1).Value = Me.txt_purchase_price.Value
+
+    ' Clear Boxes
+    Me.txt_product.Value = ""
+    Me.txt_Sale_price.Value = ""
+    Me.txt_purchase_price.Value = ""
+    Me.txt_id.Value = ""
+
+    Call show_Data
+
+    MsgBox "Product has been updated to the Product Master", vbInformation
+End Sub
+
+Private Sub ListBox1_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+    Me.txt_id.Value = Me.ListBox1.List(Me.ListBox1.ListIndex, 0)
+    Me.txt_product.Value = Me.ListBox1.List(Me.ListBox1.ListIndex, 1)
+    Me.txt_Sale_price.Value = Me.ListBox1.List(Me.ListBox1.ListIndex, 2)
+    Me.txt_purchase_price.Value = Me.ListBox1.List(Me.ListBox1.ListIndex, 3)
+End Sub
+
+Private Sub UserForm_Activate()
+    Call show_Data
+End Sub
+
+Private Sub UserForm_QueryClose(Cancel As Integer, CloseMode As Integer)
+    Call frm_Inventory_Management.Add_product_List
+    Call frm_Inventory_Management.Show_Inventory
+End Sub
