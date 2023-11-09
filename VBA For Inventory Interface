@@ -1,0 +1,163 @@
+Private Sub but_refresh_Click()
+    Call Show_Inventory
+    Call Add_product_List
+    Call Show_Sale_Purchase_Data
+    Call Show_Inventory
+    Call Show_Numbers
+End Sub
+
+Private Sub cmb_add_Click()
+    ' Validation
+    If Not ValidateInputs() Then
+        Exit Sub
+    End If
+
+    ' Continue with the rest of the code 
+    If Me.cmb_product.Value = "" Then
+        MsgBox "Please select the product", vbCritical
+        Exit Sub
+    End If
+
+    If Not IsNumeric(Me.txt_quantity.Value) Then
+        MsgBox "Please enter correct quantity", vbCritical
+        Exit Sub
+    End If
+
+    If Me.cmb_type.Value = "" Then
+        MsgBox "Please select the type", vbCritical
+        Exit Sub
+    End If
+
+    If Me.txt_buyer_name.Value = "" Then
+        MsgBox "Please enter the buyer's name", vbCritical
+        Exit Sub
+    End If
+
+    ' ... Add Data
+    Dim sh As Worksheet
+    Set sh = ThisWorkbook.Sheets("Sale_Purchase")
+    Dim lr As Long
+    lr = Application.WorksheetFunction.CountA(sh.Range("A:A"))
+    sh.Range("A" & lr + 1).Value = lr
+    sh.Range("B" & lr + 1).Value = Me.cmb_product.Value
+    sh.Range("C" & lr + 1).Value = Me.cmb_type.Value
+    sh.Range("D" & lr + 1).Value = Me.txt_quantity.Value
+    sh.Range("E" & lr + 1).Value = Me.txt_rate.Value
+    sh.Range("F" & lr + 1).Value = Me.txt_rate.Value * Me.txt_quantity.Value
+
+    If Me.cmb_type.Value = "Purchase" Then
+        sh.Range("G" & lr + 1).Value = "NA"
+    Else
+        sh.Range("G" & lr + 1).Value = (Me.txt_rate.Value * Me.txt_quantity.Value) - Application.WorksheetFunction.VLookup(Me.cmb_product, ThisWorkbook.Sheets("Product_Master").Range("B:D"), 3, 0) * Me.txt_quantity.Value
+    End If
+
+    sh.Range("H" & lr + 1).Value = Me.txt_buyer_name.Value
+    sh.Range("I" & lr + 1).Value = Me.txt_date.Value
+
+    ' Clear Boxes
+    Me.cmb_product.Value = ""
+    Me.cmb_type.Value = ""
+    Me.txt_quantity.Value = ""
+    Me.txt_rate.Value = ""
+    Me.txt_buyer_name.Value = ""
+
+    Call Show_Inventory
+    Call Add_product_List
+    Call Show_Sale_Purchase_Data
+    Call Show_Inventory
+    Call Show_Numbers
+
+    MsgBox "Data has been Added!", vbInformation
+End Sub
+
+Private Sub cmb_product_Change()
+    ' ...
+End Sub
+
+Private Sub cmb_type_Change()
+    ' ...
+End Sub
+
+Private Sub cmb_update_Click()
+    ' ...
+End Sub
+
+Private Sub CommandButton1_Click()
+    ' ...
+End Sub
+
+Private Sub CommandButton2_Click()
+    ' ...
+End Sub
+
+Private Sub CommandButton3_Click()
+    ' ...
+End Sub
+
+Private Sub CommandButton4_Click()
+    ' ...
+End Sub
+
+Private Sub CommandButton5_Click()
+    ' ...
+End Sub
+
+Private Sub Frame1_Click()
+    ' ...
+End Sub
+
+Private Sub Image11_Click()
+    ' ...
+End Sub
+
+Private Sub Image2_Click()
+    ' ...
+End Sub
+
+Private Sub Image3_Click()
+    ' ...
+End Sub
+
+Private Sub Label95_Click()
+    ' ...
+End Sub
+
+Private Sub ListBox2_DblClick(ByVal Cancel As MSForms.ReturnBoolean)
+    ' ...
+End Sub
+
+Private Sub OptionButton1_Click()
+    ' ...
+End Sub
+
+Private Sub OptionButton2_Click()
+    ' ...
+End Sub
+
+Private Sub OptionButton3_Click()
+    ' ...
+End Sub
+
+Private Sub UserForm_Initialize()
+    ' ...
+End Sub
+
+Sub Add_product_List()
+    ' ...
+End Sub
+
+Private Function ValidateInputs() As Boolean
+    ' ...
+End Function
+
+Sub Show_Sale_Purchase_Data()
+    ' ...
+End Sub
+
+Sub Show_Inventory()
+    ' ...
+End Sub
+
+Sub Show_Numbers()
+    ' ...
+End Sub
